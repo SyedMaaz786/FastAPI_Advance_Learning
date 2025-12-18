@@ -1,12 +1,12 @@
 from sqlmodel import SQLModel, Field, Column
 import sqlalchemy.dialects.postgresql as pg
-from datetime import datetime, date
 import uuid
+from datetime import datetime
 
 
-class BookModel(SQLModel, table = True):
-    __tablename__ = "books"  #PRIMARY key column
-    uid: uuid.UUID = Field(
+class User(SQLModel, table = True): 
+    __tablename__ = 'users'
+    uid: uuid.UUID = Field (
         sa_column = Column(
             pg.UUID,
             nullable = False,
@@ -14,14 +14,15 @@ class BookModel(SQLModel, table = True):
             default = uuid.uuid4
         )
     )
-    title: str
-    author: str
-    publisher: str
-    published_date: date
-    page_count: int
-    language: str
+    username: str
+    email: str
+    first_name: str
+    last_name: str
+    is_verified: bool =  Field(default=False)
     created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP,default=datetime.now))
     updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP,default=datetime.now))
 
-    def __repr__(self):  #It defines how an object is represented as a string when Python needs to show it
-        return f"<Book {self.title}>"
+    def __repr__(self):  #dunder method
+        return f"<User {self.username}>" #__repr__ is for developers, not users — it makes objects readable while debugging.
+
+
