@@ -5,20 +5,28 @@ from .models import BookModel
 from datetime import datetime
 
 class BookService:
-    async def get_all_books(self, session: AsyncSession):
+    async def get_all_books(
+        self,
+        session: AsyncSession):
         statement = select(BookModel).order_by(desc(BookModel.created_at))
         result = await session.exec(statement)
         return result.all()
+ 
 
-
-    async def get_book(self, book_uid: str, session: AsyncSession):
+    async def get_book(
+        self,
+        book_uid: str,
+        session: AsyncSession):
         statement = select(BookModel).where(BookModel.uid == book_uid )
         result = await session.exec(statement)
         book = result.first()
         return book if book is not None else None
 
 
-    async def create_book(self, book_data: BookCreateModel, session: AsyncSession):
+    async def create_book(
+        self,
+        book_data: BookCreateModel,
+        session: AsyncSession):
         book_data_dict = book_data.model_dump()
         new_book = BookModel(
             **book_data_dict
@@ -46,7 +54,10 @@ class BookService:
             return None
 
 
-    async def delete_book(self, book_uid: str, session: AsyncSession):
+    async def delete_book(
+        self,
+        book_uid: str, 
+        session: AsyncSession):
         book_to_delete = await self.get_book(book_uid, session)
         if book_to_delete is not None:
             await session.delete(book_to_delete)
