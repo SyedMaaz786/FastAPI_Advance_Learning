@@ -37,7 +37,7 @@ def create_access_token(user_data: dict, expiry: timedelta = None, refresh: bool
 
 
 #decoding
-def decode_token(token: str) -> dict:
+def decode_token(token: str) -> dict:  #decodes and returns the payload
     try:
         token_data = jwt.decode(
             jwt = token,
@@ -45,7 +45,7 @@ def decode_token(token: str) -> dict:
             algorithms= Config.JWT_ALGORITHM
         )
         return token_data
-    except jwt.PyJWKError as e:
+    except jwt.PyJWTError as e:
         logging.exception(e)
         return None
 

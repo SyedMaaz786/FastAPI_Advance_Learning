@@ -5,8 +5,9 @@ from src.db.main import get_session
 from sqlmodel.ext.asyncio.session import AsyncSession
 from fastapi.exceptions import HTTPException
 from .utils import create_access_token, decode_token, verify_passwd
-from datetime import timedelta
+from datetime import timedelta, datetime
 from fastapi.responses import JSONResponse
+from .dependencies import RefreshTokenBearer
 
 auth_router = APIRouter()
 user_service = UserService()
@@ -69,3 +70,17 @@ async def login_user(login_data: UserLoginModel, session: AsyncSession = Depends
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail='Invalid Email or Password'
     )
+
+
+@auth_router.get("/refresh_token")   # So this is basically we have created a route which is used to create a new access token by sending the valid refresh token in the req and if we provide the access token then it will ask to send the request token
+async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer())):
+    expiry_timestamp = token_details["exp"]
+    if datetime.fromtimestamp(expiry_timestamp) > datetime.now():
+        new_access_token = create_access_token(
+            user_data = token_details["user"]
+        )
+        return JSONResponse (content={
+            "access_token": new_access_token
+        })
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired token")
+
