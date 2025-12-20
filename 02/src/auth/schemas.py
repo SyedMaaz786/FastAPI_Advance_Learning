@@ -7,7 +7,7 @@ class UserCreateModel(BaseModel):  #Remember this schemas are serialization and 
     last_name: str = Field(max_length=20)
     username: str = Field(max_length=10)
     email: str = Field(max_length=40)
-    password: str = Field(min_length=8, max_length=72)
+    password: str = Field(min_length=8)
 
 
 class UserModel(BaseModel):
