@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
+from src.books.schemas import BookModel
 from datetime import datetime
+from typing import List
 import uuid
 
 class UserCreateModel(BaseModel):  #Remember this schemas are serialization and our models are storage(main)
@@ -20,6 +22,7 @@ class UserModel(BaseModel):
     password_hash: str = Field(exclude=True)
     created_at: datetime
     updated_at: datetime
+    books: List[BookModel]
 
 
 class UserLoginModel(BaseModel):

@@ -1,5 +1,7 @@
-from sqlmodel import SQLModel, Field, Column
+from sqlmodel import SQLModel, Field, Column, Relationship
 import sqlalchemy.dialects.postgresql as pg
+from src.books import models
+from typing import List
 import uuid
 from datetime import datetime
 
@@ -29,6 +31,7 @@ class User(SQLModel, table = True):
     password_hash: str = Field(exclude=True)
     created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP,default=datetime.now))
     updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP,default=datetime.now))
+    books: List["models.BookModel"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
 
     def __repr__(self):  #dunder method
         return f"<User {self.username}>" #__repr__ is for developers, not users — it makes objects readable while debugging.
