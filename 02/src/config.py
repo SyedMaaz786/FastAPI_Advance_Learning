@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-class Settings(BaseSettings):    #This file is completely used for the env files being read automatically
+class Settings(BaseSettings):    #This file is completely used for the env files being read automatically.
     DATABASE_URL : str
     JWT_SECRET: str
     JWT_ALGORITHM: str
