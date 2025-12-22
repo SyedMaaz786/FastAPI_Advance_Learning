@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from src.books.routes import book_router
 from src.auth.routes import auth_router
+from src.reviews.routes import review_router
 from contextlib import asynccontextmanager
 from src.db.main import init_db
 
@@ -17,3 +18,4 @@ app = FastAPI(
 
 app.include_router(book_router, prefix="/books") #This is the logic to remove a common word in our url ie /books
 app.include_router(auth_router, prefix="/auth") 
+app.include_router(review_router, prefix="/reviews")

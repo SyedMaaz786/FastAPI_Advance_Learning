@@ -13,7 +13,7 @@ async_engine = AsyncEngine(   #Created a engine
 
 async def init_db():
     async with async_engine.begin() as conn:  #This function opens a database connection asynchronously, runs a simple SQL query, and prints the result.
-        from src.books.models import BookModel
+        from src.db.models import BookModel
 
         await conn.run_sync(SQLModel.metadata.create_all)
 
