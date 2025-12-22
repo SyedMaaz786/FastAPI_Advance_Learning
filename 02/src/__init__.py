@@ -12,7 +12,7 @@ async def life_span(app: FastAPI):
     print(f"Server has been stopped")  #This is going to print in the console when server is ending
 
 app = FastAPI(
-    lifespan=life_span
+
 )
 
 app.include_router(book_router, prefix="/books") #This is the logic to remove a common word in our url ie /books
