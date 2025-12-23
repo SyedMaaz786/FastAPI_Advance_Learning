@@ -9,6 +9,7 @@ from datetime import timedelta, datetime
 from fastapi.responses import JSONResponse
 from .dependencies import RefreshTokenBearer, AccessTokenBearer, get_current_user, RoleChecker
 from src.db.redis import add_jti_to_blocklist
+from src.errors import UserAlreadyExists, UserNotFound, InvalidCredentials, InvalidToken
 
 auth_router = APIRouter()
 user_service = UserService()
@@ -28,9 +29,7 @@ async def create_user_acc(
     email = user_data.email
     user_exists = await user_service.user_exists(email, session)
     if user_exists:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User with email already exists")
-    new_user = await user_service.create_user(user_data, session)
-    return new_user
+        raise UserAlreadyExists()
 
 
 @auth_router.post("/login")
@@ -69,10 +68,7 @@ async def login_user(login_data: UserLoginModel, session: AsyncSession = Depends
                 }
             )
         
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Invalid Email or Password'
-    )
+    raise InvalidCredentials()
 
 
 @auth_router.get("/refresh_token")   # So this is basically we have created a route which is used to create a new access token by sending the valid refresh token in the req and if we provide the access token then it will ask to send the request token
@@ -85,7 +81,7 @@ async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer(
         return JSONResponse (content={
             "access_token": new_access_token
         })
-    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired token")
+    raise InvalidToken()
 
 
 

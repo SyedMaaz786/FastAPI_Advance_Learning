@@ -3,6 +3,8 @@ from .schemas import BookCreateModel, BookUpdateModel
 from sqlmodel import select, desc
 from src.db.models import BookModel
 from datetime import datetime
+from sqlalchemy.exc import SQLAlchemyError
+from src.errors import BookNotFound
 
 class BookService:
     async def get_all_books(
@@ -25,10 +27,14 @@ class BookService:
         self,
         book_uid: str,
         session: AsyncSession):
-        statement = select(BookModel).where(BookModel.uid == book_uid )
-        result = await session.exec(statement)
-        book = result.first()
-        return book if book is not None else None
+        try:
+            statement = select(BookModel).where(BookModel.uid == book_uid )
+            result = await session.exec(statement)
+            book = result.first()
+            return book if book is not None else None
+        
+        except SQLAlchemyError:
+            raise BookNotFound()
 
 
     async def create_book(
