@@ -8,7 +8,6 @@ from src.config import Config
 async_engine = AsyncEngine(   #Created a engine
     create_engine(         #Create a connection engine that lets your app talk to the database(pg) asynchronously
     url = Config.DATABASE_URL,
-    echo=True
 ))
 
 async def init_db():
